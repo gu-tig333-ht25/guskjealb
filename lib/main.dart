@@ -19,8 +19,8 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.grey),
         useMaterial3: true,
       ),
-      // home: MyHomePage(title: 'TIG333 TODO),
-      home: AddTodoPage(),
+      home: MyHomePage(title: 'TIG333 TODO'),
+      //home: AddTodoPage(),
     );
   }
 }
@@ -77,8 +77,19 @@ class _MyHomePageState extends State<MyHomePage> {
             },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
+        onPressed: () async {
+          final newTodo = await Navigator.push<String>(
+            context,
+            MaterialPageRoute(builder: (context) => AddTodoPage()),
+          );
+
+          if (newTodo != null && newTodo.isNotEmpty) {
+            setState(() {
+              todos[todos.length] = [newTodo, false];
+            });
+          }
+        },
+        tooltip: 'Add new todo-item',
         child: Icon(Icons.add),
       ),
     );
@@ -130,6 +141,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
 class AddTodoPage extends StatelessWidget {
   AddTodoPage({super.key});
+  final TextEditingController textController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -137,20 +149,48 @@ class AddTodoPage extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: Colors.grey,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios_new, size: 32,),
+          tooltip: 'Go back',
+          onPressed: () {
+            Navigator.pop(context);
+          }, // TODO: Make it do stuff
+        ),
         title: Text("TIG333 TODO", style: TextStyle(fontSize: 35, fontWeight: FontWeight.w500),),
       ),
-      body: Column(
-        children: [
-          TextField(
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(width: 1.5),
+      body: Padding(
+        padding: const EdgeInsets.all(40),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            TextField(
+              controller: textController,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(), // TODO: Fix the uglyness of this and the row below
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(width: 2.5),
+                ),
+                hintText: 'What are you going to do?',
               ),
-              hintText: 'What are you going to do?',
             ),
-          ),
-        ],
+            SizedBox(height: 50), // TODO: Ugly, fix this
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextButton.icon(
+                  icon: Icon(Icons.add, color: Colors.black, size: 28,),
+                  label: Text('ADD', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600, color: Colors.black)),
+                  onPressed: () {
+                    final text = textController.text.trim();
+                    if (text.isNotEmpty) {
+                      Navigator.pop(context, text);
+                    }
+                  }, // TODO: Make it do stuff
+                ),
+              ],
+            ),
+          ],
+        ),
       )
     );
   }
