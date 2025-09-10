@@ -19,7 +19,8 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.grey),
         useMaterial3: true,
       ),
-      home: MyHomePage(title: 'TIG333 TODO'),
+      // home: MyHomePage(title: 'TIG333 TODO),
+      home: AddTodoPage(),
     );
   }
 }
@@ -123,6 +124,34 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class AddTodoPage extends StatelessWidget {
+  AddTodoPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        backgroundColor: Colors.grey,
+        title: Text("TIG333 TODO", style: TextStyle(fontSize: 35, fontWeight: FontWeight.w500),),
+      ),
+      body: Column(
+        children: [
+          TextField(
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(width: 1.5),
+              ),
+              hintText: 'What are you going to do?',
+            ),
+          ),
+        ],
+      )
     );
   }
 }
