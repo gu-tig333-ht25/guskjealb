@@ -73,48 +73,51 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title, style: TextStyle(fontSize: 35, fontWeight: FontWeight.w500),),
       ),
-      body: Center(
-        child: Row(
-          children: [
-            Transform.scale(
-              scale: 1.5,
-              child: Checkbox(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.zero,
-                ), 
-                side: WidgetStateBorderSide.resolveWith(
-                  (states) => const BorderSide(color: Colors.black, width: 2),
-                ),
-                fillColor: WidgetStateProperty.resolveWith<Color>(
-                  (states) {
-                    if (states.contains(WidgetState.selected)) {
-                      return Colors.white; // background when checked
-                    }
-                    return Colors.white;   // background when unchecked
-                  },
-                ),
-                checkColor: Colors.black,
-                value: _checkedValue, 
-                onChanged: (newValue)
-                  {
-                    if (newValue != null) {
-                      setState(() {
-                        _checkedValue = newValue;
-                      });
-                    }
-                  }
-                ),
-            ),
-            Text('Write a book', style: TextStyle(fontSize: 35)),
-            Icon(Icons.close, size: 35),
-          ],
-        )
+      body: Column(
+        children: [
+          _item("Write a book"),
+          _item("Do homework"),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: 'Increment',
         child: Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+
+  Widget _item(String text) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Transform.scale(
+          scale: 1.3,
+          child: Checkbox(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.zero,
+            ), 
+            side: WidgetStateBorderSide.resolveWith(
+              (states) => const BorderSide(color: Colors.black, width: 1.5),
+            ),
+            fillColor: WidgetStateColor.transparent,
+            checkColor: Colors.black,
+            value: _checkedValue, 
+            onChanged: (newValue)
+              {
+                if (newValue != null) {
+                  setState(() {
+                    _checkedValue = newValue;
+                  });
+                }
+              }
+            ),
+        ),
+        Expanded(
+          child: Text(text, style: TextStyle(fontSize: 35, decoration: _checkedValue ? TextDecoration.lineThrough : TextDecoration.none)),
+        ),
+        Icon(Icons.close, size: 35),
+      ],
     );
   }
 }
