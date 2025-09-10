@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -42,8 +43,10 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0; // to remove
-  bool _checkedValue = false;
+  // int id references [String text, bool done]
+  Map<int, List<dynamic>> todos = {0:["Write a book", false], 1:["Do homework", false]};
+
+  int _counter = 0; // TODO: remove
 
   // will eventually change page to the page that creates a new todo-list item. 
   void _incrementCounter() {
@@ -59,35 +62,28 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: Colors.grey,//Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
+        backgroundColor: Colors.grey,
         title: Text(widget.title, style: TextStyle(fontSize: 35, fontWeight: FontWeight.w500),),
       ),
-      body: Column(
-        children: [
-          _item("Write a book"),
-          _item("Do homework"),
-        ],
+      body: ListView.builder(
+            itemCount: todos.length,
+            itemBuilder: (context, index) {
+              final todo = todos[index]!; // TODO: bad, fix later
+              return _item(index, todo[0] as String, todo[1] as bool);
+            },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: 'Increment',
         child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
     );
   }
 
-  Widget _item(String text) {
+  Widget _item(int id, String text, bool complete) {
     return SizedBox(
       height: 80,
       child: Container(
@@ -108,19 +104,20 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 fillColor: WidgetStateColor.transparent,
                 checkColor: Colors.black,
-                value: _checkedValue, 
+                value: complete, 
                 onChanged: (newValue)
                   {
                     if (newValue != null) {
                       setState(() {
-                        _checkedValue = newValue;
+                        //complete = newValue;
+                        todos[id]![1] = newValue; // TODO: bad, fix later
                       });
                     }
                   }
                 ),
             ),
             Expanded(
-              child: Text(text, style: TextStyle(fontSize: 35, decoration: _checkedValue ? TextDecoration.lineThrough : TextDecoration.none)),
+              child: Text(text, style: TextStyle(fontSize: 35, decoration: complete ? TextDecoration.lineThrough : TextDecoration.none)),
             ),
             Icon(Icons.close, size: 35),
           ],
