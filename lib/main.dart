@@ -88,36 +88,44 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _item(String text) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Transform.scale(
-          scale: 1.3,
-          child: Checkbox(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.zero,
-            ), 
-            side: WidgetStateBorderSide.resolveWith(
-              (states) => const BorderSide(color: Colors.black, width: 1.5),
-            ),
-            fillColor: WidgetStateColor.transparent,
-            checkColor: Colors.black,
-            value: _checkedValue, 
-            onChanged: (newValue)
-              {
-                if (newValue != null) {
-                  setState(() {
-                    _checkedValue = newValue;
-                  });
-                }
-              }
-            ),
+    return SizedBox(
+      height: 80,
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border(bottom: BorderSide(color: Colors.grey, width: 1)),
         ),
-        Expanded(
-          child: Text(text, style: TextStyle(fontSize: 35, decoration: _checkedValue ? TextDecoration.lineThrough : TextDecoration.none)),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Transform.scale(
+              scale: 1.3,
+              child: Checkbox(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.zero,
+                ), 
+                side: WidgetStateBorderSide.resolveWith(
+                  (states) => const BorderSide(color: Colors.black, width: 1.5),
+                ),
+                fillColor: WidgetStateColor.transparent,
+                checkColor: Colors.black,
+                value: _checkedValue, 
+                onChanged: (newValue)
+                  {
+                    if (newValue != null) {
+                      setState(() {
+                        _checkedValue = newValue;
+                      });
+                    }
+                  }
+                ),
+            ),
+            Expanded(
+              child: Text(text, style: TextStyle(fontSize: 35, decoration: _checkedValue ? TextDecoration.lineThrough : TextDecoration.none)),
+            ),
+            Icon(Icons.close, size: 35),
+          ],
         ),
-        Icon(Icons.close, size: 35),
-      ],
+      ),
     );
   }
 }
