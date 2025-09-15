@@ -7,10 +7,16 @@ void main() {
   runApp(MyApp());
 }
 
+class Todo {
+  String text;
+  bool done = false;
+  
+  Todo({required this.text});
+}
+
 class MyApp extends StatelessWidget {
   MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -20,22 +26,12 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: MyHomePage(title: 'TIG333 TODO'),
-      //home: AddTodoPage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
 
   final String title;
 
@@ -44,22 +40,10 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  // int id references [String text, bool done]
-  Map<int, List<dynamic>> todos = {0:["Write a book", false], 1:["Do homework", false]};
-
-  int _counter = 0; // TODO: remove
-
-  // will eventually change page to the page that creates a new todo-list item. 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+  List<Todo> todos = [
+    Todo(text: "Write a book"),
+    Todo(text: "Do homework"),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -72,8 +56,8 @@ class _MyHomePageState extends State<MyHomePage> {
       body: ListView.builder(
             itemCount: todos.length,
             itemBuilder: (context, index) {
-              final todo = todos[index]!; // TODO: bad, fix later
-              return _item(index, todo[0] as String, todo[1] as bool);
+              final todo = todos[index];
+              return _item(todo);
             },
       ),
       floatingActionButton: FloatingActionButton(
@@ -85,7 +69,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
           if (newTodo != null && newTodo.isNotEmpty) {
             setState(() {
-              todos[todos.length] = [newTodo, false];
+              todos.add(Todo(text: newTodo));
             });
           }
         },
@@ -95,7 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget _item(int id, String text, bool complete) {
+  Widget _item(Todo todo) {
     return SizedBox(
       height: 80,
       child: Container(
@@ -116,22 +100,27 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 fillColor: WidgetStateColor.transparent,
                 checkColor: Colors.black,
-                value: complete, 
+                value: todo.done, 
                 onChanged: (newValue)
                   {
-                    if (newValue != null) {
-                      setState(() {
-                        //complete = newValue;
-                        todos[id]![1] = newValue; // TODO: bad, fix later
-                      });
-                    }
+                    setState(() {
+                      todo.done = !todo.done;
+                    });
                   }
                 ),
             ),
             Expanded(
-              child: Text(text, style: TextStyle(fontSize: 35, decoration: complete ? TextDecoration.lineThrough : TextDecoration.none)),
+              child: Text(todo.text, style: TextStyle(fontSize: 35, decoration: todo.done ? TextDecoration.lineThrough : TextDecoration.none)),
             ),
-            Icon(Icons.close, size: 35),
+            IconButton(
+              tooltip: "Delete",
+              onPressed: () {
+                setState( () {
+                  todos.remove(todo);
+                });
+              }, 
+              icon: Icon(Icons.close, size: 35)
+            ),
           ],
         ),
       ),
@@ -154,7 +143,7 @@ class AddTodoPage extends StatelessWidget {
           tooltip: 'Go back',
           onPressed: () {
             Navigator.pop(context);
-          }, // TODO: Make it do stuff
+          },
         ),
         title: Text("TIG333 TODO", style: TextStyle(fontSize: 35, fontWeight: FontWeight.w500),),
       ),
@@ -185,7 +174,7 @@ class AddTodoPage extends StatelessWidget {
                     if (text.isNotEmpty) {
                       Navigator.pop(context, text);
                     }
-                  }, // TODO: Make it do stuff
+                  },
                 ),
               ],
             ),
