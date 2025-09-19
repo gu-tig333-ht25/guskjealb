@@ -13,24 +13,26 @@ class TodoAlbum extends ChangeNotifier {
 
   final List<Todo> todos = [];
 
-  Future<void> fetchTodos() async { // TODO: make function better
-  print(todos);
+  // is called after every api-call to make sure we have the latest updates all the time. 
+  Future<void> fetchTodos() async {
 
     final uri = Uri.parse('$url/todos?key=$key');
     final response = await http.get(uri);
 
     if (response.statusCode == 200) {
       final List<dynamic> jsonList = jsonDecode(response.body) as List<dynamic>;
+      // response body will be the list of todos, so save them locally
       todos
         ..clear()
         ..addAll(jsonList.map((j) => Todo.fromJson(j as Map<String, dynamic>)));
+
       notifyListeners();
     } else {
       throw Exception('Fetch Failed');
     }
   }
 
-  Future<Todo> postTodo(String title) async { // TODO: make function better
+  void postTodo(String title) async {
     final uri = Uri.parse('$url/todos?key=$key');
     final response = await http.post(
       uri,
@@ -39,22 +41,7 @@ class TodoAlbum extends ChangeNotifier {
     );
 
     if (response.statusCode == 201 || response.statusCode == 200) {
-      final body = jsonDecode(response.body);
-
-      Map<String, dynamic> json;
-
-      if (body is List) {
-        // take first element if API returns a list
-        json = Map<String, dynamic>.from(body.first as Map);
-      } else if (body is Map) {
-        json = Map<String, dynamic>.from(body);
-      } else {
-        throw Exception('Unexpected response format: ${body.runtimeType}');
-      }
-
-      final todo = Todo.fromJson(json);
       await fetchTodos();
-      return todo;
     } else {
       throw Exception('Post Failed');
     }
