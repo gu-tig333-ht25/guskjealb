@@ -39,7 +39,7 @@ class TodoItem extends StatelessWidget {
             ),
             Expanded(
               child: Text(
-                todo.text,
+                todo.getTitle(),
                 style: TextStyle(
                   fontSize: 35,
                   decoration: todo.done ? TextDecoration.lineThrough : null,

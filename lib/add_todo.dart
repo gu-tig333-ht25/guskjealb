@@ -28,14 +28,14 @@ class AddTodoPage extends StatelessWidget {
             TextField(
               controller: textController,
               decoration: InputDecoration(
-                border: OutlineInputBorder(), // TODO: Fix the uglyness of this and the row below
+                border: OutlineInputBorder(),
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(width: 2.5),
                 ),
                 hintText: 'What are you going to do?',
               ),
             ),
-            SizedBox(height: 50), // TODO: Ugly, fix this
+            SizedBox(height: 50),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -43,9 +43,9 @@ class AddTodoPage extends StatelessWidget {
                   icon: Icon(Icons.add, color: Colors.black, size: 28,),
                   label: Text('ADD', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600, color: Colors.black)),
                   onPressed: () {
-                    final text = textController.text.trim();
-                    if (text.isNotEmpty) {
-                      Navigator.pop(context, text);
+                    final title = textController.text.trim();
+                    if (title.isNotEmpty) {
+                      Navigator.pop(context, title);
                     }
                   },
                 ),
