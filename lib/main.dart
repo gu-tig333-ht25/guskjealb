@@ -51,15 +51,15 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   String getFilterText(TodoFilter filter) {
-  switch (filter) {
-    case TodoFilter.all:
-      return 'All';
-    case TodoFilter.done:
-      return 'Done';
-    case TodoFilter.notDone:
-      return 'Not Done';
+    switch (filter) {
+      case TodoFilter.all:
+        return 'All';
+      case TodoFilter.done:
+        return 'Done';
+      case TodoFilter.notDone:
+        return 'Not Done';
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +120,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
           if (title != null && title.isNotEmpty) {
             final album = context.read<TodoAlbum>();
-            await album.postTodo(title);
+            album.postTodo(title);
           }
         },
 
